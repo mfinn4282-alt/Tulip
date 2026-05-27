@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will you go on a date with me sudu 🌷</title> ✨</title>
+    <title>Our Date Planner ✨</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,6 +33,8 @@
             color: #666;
             line-height: 1.5;
         }
+        
+        /* FIX: Made the button wrapper a flex row for perfect initial alignment */
         .buttons {
             display: flex;
             justify-content: center;
@@ -59,12 +61,14 @@
             transform: scale(1.05);
             background-color: #ff758f;
         }
+        
+        /* FIX: Starts out as normal text positioning so it sits next to Yes button */
         #noBtn {
             background-color: #cccccc;
             color: #333333;
-            position: absolute;
+            position: relative; 
             touch-action: none;
-            z-index: 10; /* Ensures it stays visible but we control position */
+            z-index: 10;
         }
         
         .tab-content {
@@ -110,7 +114,7 @@
 
     <div class="container">
         <div id="askTab" class="tab-content active-tab">
-            <h1 id="question">Will you go on a date with me sudu 🌷✨</h1>
+            <h1 id="question">Will you go on a date with me sudu?  🌷✨</h1>
             <div class="buttons">
                 <button id="yesBtn" onclick="goToTab('dateTimeTab')">Yes!</button>
                 <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()" ontouchstart="moveButton()">No</button>
@@ -139,10 +143,10 @@
                 <select id="activitySelect">
                     <option value="" disabled selected>Select an activity...</option>
                     <option value="Grabbing cozy coffee & talking for hours ☕">Cozy Coffee & Talking ☕</option>
-                    <option value="Going on a romantic lunch date 🍝">Romantic Dinner Date 🍝</option>
-                    <option value="Watching a movie together with snacks 🍿">Movie Night 🍿</option>
+                    <option value="Going on a romantic dinner date 🍝">Romantic Lunch Date 🍝</option>
+                    <option value="Watching a movie together with snacks 🍿">Movie 🍿</option>
                     <option value="Going on a scenic walk & eating ice cream 🍦">Scenic Walk & Ice Cream 🍦</option>
-                    <option value="Going a bike ride with a beautiful scene 🏍️">bike ride with a beautiful scenes 🏍️</option>
+                    <option value="Going on a bike ride with a beautiful scenes 🏍️">Bike ride with a beautiful scenes </option>
                 </select>
             </div>
             <button class="next-btn" onclick="finishPlanning()">Lock it in! ❤️</button>
@@ -166,10 +170,8 @@
             let randomX, randomY;
             let overlapping = true;
 
-            // Get the exact location and size of the Yes button
             const yesRect = yesBtn.getBoundingClientRect();
 
-            // Keep generating a new position until it is safely away from the Yes button
             while (overlapping) {
                 const maxX = window.innerWidth - noBtn.offsetWidth - padding;
                 const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -177,8 +179,7 @@
                 randomX = Math.max(padding, Math.floor(Math.random() * maxX));
                 randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-                // Check if the proposed 'No' button area overlaps with the 'Yes' button area
-                const buffer = 40; // Extra breathing room around the Yes button
+                const buffer = 50; 
                 const noRectFuture = {
                     left: randomX,
                     right: randomX + noBtn.offsetWidth,
@@ -189,13 +190,12 @@
                 const isOverlappingX = noRectFuture.right >= (yesRect.left - buffer) && noRectFuture.left <= (yesRect.right + buffer);
                 const isOverlappingY = noRectFuture.bottom >= (yesRect.top - buffer) && noRectFuture.top <= (yesRect.bottom + buffer);
 
-                // If it doesn't overlap on X or Y, it's safe!
                 if (!(isOverlappingX && isOverlappingY)) {
                     overlapping = false; 
                 }
             }
             
-            // Set the safe new position
+            // FIX: Changes to 'fixed' position ONLY when she attempts to interact with it
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
