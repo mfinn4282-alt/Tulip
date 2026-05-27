@@ -19,29 +19,23 @@
         }
         .container {
             background: white;
-            padding: 35px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 450px;
             width: 100%;
+            transition: all 0.5s ease;
         }
         h1, h2 {
             color: #ff4d6d;
             margin-bottom: 20px;
         }
-        p {
-            color: #666;
-            line-height: 1.5;
-        }
-        
-        /* FIX: Made the button wrapper a flex row for perfect initial alignment */
         .buttons {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 20px;
             position: relative;
-            height: 60px;
+            height: 50px;
             margin-top: 20px;
         }
         button {
@@ -50,34 +44,27 @@
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            transition: transform 0.1s ease, background-color 0.2s ease;
+            transition: all 0.2s ease;
             font-weight: bold;
         }
-        #yesBtn, .next-btn {
+        #yesBtn, .submit-btn {
             background-color: #ff4d6d;
             color: white;
         }
-        #yesBtn:hover, .next-btn:hover {
+        #yesBtn:hover, .submit-btn:hover {
             transform: scale(1.05);
             background-color: #ff758f;
         }
-        
-        /* FIX: Starts out as normal text positioning so it sits next to Yes button */
         #noBtn {
             background-color: #cccccc;
             color: #333333;
-            position: relative; 
-            touch-action: none;
-            z-index: 10;
+            position: absolute;
         }
-        
-        .tab-content {
-            display: none;
+        /* Planner Form Styles */
+        #plannerSection {
+            display: none; /* Hidden at first */
             text-align: left;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        .active-tab {
-            display: block;
+            animation: fadeIn 0.5s ease-in;
         }
         .form-group {
             margin-bottom: 20px;
@@ -90,8 +77,8 @@
         }
         input[type="date"], input[type="time"], select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ffccd5;
+            padding: 10px;
+            border: 2px border #ffccd5;
             border-radius: 10px;
             font-size: 1rem;
             box-sizing: border-box;
@@ -100,7 +87,7 @@
         input:focus, select:focus {
             border-color: #ff4d6d;
         }
-        .next-btn {
+        .submit-btn {
             width: 100%;
             margin-top: 10px;
         }
@@ -113,140 +100,81 @@
 <body>
 
     <div class="container">
-        <div id="askTab" class="tab-content active-tab">
-            <h1 id="question">Will you go on a date with me sudu?  🌷✨</h1>
+        <div id="askSection">
+            <h1 id="question">Will you go on a date with me? ☕✨</h1>
             <div class="buttons">
-                <button id="yesBtn" onclick="goToTab('dateTimeTab')">Yes!</button>
-                <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()" ontouchstart="moveButton()">No</button>
+                <button id="yesBtn" onclick="showPlanner()">Yes!</button>
+                <button id="noBtn" onmouseover="moveButton()">No</button>
             </div>
         </div>
 
-        <div id="dateTimeTab" class="tab-content">
-            <h2>Pick a Date & Time 🗓️</h2>
-            <div class="form-group">
-                <label for="dateSelect">Which day works best?</label>
-                <input type="date" id="dateSelect">
-            </div>
-            <div class="form-group">
-                <label for="timeSelect">What time?</label>
-                <input type="time" id="timeSelect">
-            </div>
-            <button class="next-btn" onclick="validateDateTime()">Next: Plan Activities ✨</button>
-        </div>
-
-        <div id="activitiesTab" class="tab-content">
-            <h2>What are we doing? 🥂</h2>
-            <p style="text-align: center; font-size: 0.9rem; margin-bottom: 20px;">Choose the vibe for our date:</p>
+        <div id="plannerSection">
+            <h2>Yay! Let's plan it 🥰</h2>
             
             <div class="form-group">
-                <label for="activitySelect">Our main plan:</label>
-                <select id="activitySelect">
-                    <option value="" disabled selected>Select an activity...</option>
-                    <option value="Grabbing cozy coffee & talking for hours ☕">Cozy Coffee & Talking ☕</option>
-                    <option value="Going on a romantic dinner date 🍝">Romantic Lunch Date 🍝</option>
-                    <option value="Watching a movie together with snacks 🍿">Movie 🍿</option>
-                    <option value="Going on a scenic walk & eating ice cream 🍦">Scenic Walk & Ice Cream 🍦</option>
-                    <option value="Going on a bike ride with a beautiful scenes 🏍️">Bike ride with a beautiful scenes </option>
+                <label for="dateSelect">Pick a day:</label>
+                <input type="date" id="dateSelect">
+            </div>
+
+            <div class="form-group">
+                <label for="timeSelect">Pick a time:</label>
+                <input type="time" id="timeSelect">
+            </div>
+
+            <div class="form-group">
+                <label for="foodSelect">What are we eating?</label>
+                <select id="foodSelect">
+                    <option value="" disabled selected>Select an option...</option>
+                    <option value="Coffee & Dessert 🍰">Coffee & Dessert 🍰</option>
+                    <option value="Pizza Date 🍕">Pizza Date 🍕</option>
+                    <option value="Burgers & Fries 🍔">Burgers & Fries 🍔</option>
+                    <option value="Romantic Dinner 🍝">Romantic Dinner 🍝</option>
+                    <option value="Ice Cream Stroll 🍦">Ice Cream Stroll 🍦</option>
                 </select>
             </div>
-            <button class="next-btn" onclick="finishPlanning()">Lock it in! ❤️</button>
-        </div>
 
-        <div id="finalTab" class="tab-content" style="text-align: center;">
-            <h2>It's officially a date! 🥰💘</h2>
-            <p>Your plan is ready! Click below to copy the details, then paste it into our chat to text it to me!</p>
-            <button class="next-btn" id="copyBtn">📋 Copy Details to Text Me</button>
+            <button class="submit-btn" onclick="sendPlan()">Lock it in! ❤️</button>
         </div>
     </div>
 
     <script>
-        let formattedMessage = "";
-
+        // Move the No button
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            const yesBtn = document.getElementById('yesBtn');
-            
-            const padding = 60;
-            let randomX, randomY;
-            let overlapping = true;
-
-            const yesRect = yesBtn.getBoundingClientRect();
-
-            while (overlapping) {
-                const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-                const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-                
-                randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-                randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-
-                const buffer = 50; 
-                const noRectFuture = {
-                    left: randomX,
-                    right: randomX + noBtn.offsetWidth,
-                    top: randomY,
-                    bottom: randomY + noBtn.offsetHeight
-                };
-
-                const isOverlappingX = noRectFuture.right >= (yesRect.left - buffer) && noRectFuture.left <= (yesRect.right + buffer);
-                const isOverlappingY = noRectFuture.bottom >= (yesRect.top - buffer) && noRectFuture.top <= (yesRect.bottom + buffer);
-
-                if (!(isOverlappingX && isOverlappingY)) {
-                    overlapping = false; 
-                }
-            }
-            
-            // FIX: Changes to 'fixed' position ONLY when she attempts to interact with it
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
             noBtn.style.position = 'fixed';
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
         }
 
-        function goToTab(tabId) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active-tab'));
-            document.getElementById(tabId).classList.add('active-tab');
-            
-            if (tabId !== 'askTab') {
-                document.body.style.backgroundColor = '#ffccd5';
-            }
+        // Transition from the question to the planner
+        function showPlanner() {
+            document.getElementById('askSection').style.display = 'none';
+            document.getElementById('plannerSection').style.display = 'block';
+            document.body.style.backgroundColor = '#ffccd5';
         }
 
-        function validateDateTime() {
+        // Handle submission
+        function sendPlan() {
             const date = document.getElementById('dateSelect').value;
             const time = document.getElementById('timeSelect').value;
-            
-            if (!date || !time) {
-                alert("Please select both a date and a time! 😊");
-                return;
-            }
-            goToTab('activitiesTab');
-        }
+            const food = document.getElementById('foodSelect').value;
 
-        function finishPlanning() {
-            const date = document.getElementById('dateSelect').value;
-            const time = document.getElementById('timeSelect').value;
-            const activity = document.getElementById('activitySelect').value;
-
-            if (!activity) {
-                alert("Please select an activity vibe! 🗓️");
+            if(!date || !time || !food) {
+                alert("Please fill out all options! 😊");
                 return;
             }
 
-            formattedMessage = `Hey! I filled out the planner. Here is our date layout:\n\n📅 Date: ${date}\n⏰ Time: ${time}\n✨ Activity: ${activity}\n\nSee you then! 😉❤️`;
+            // Create a nicely formatted message
+            const message = `Hey! Here is our date plan:\n\n📅 Date: ${date}\n⏰ Time: ${time}\n🍴 Food: ${food}\n\nCan't wait! ❤️`;
             
-            document.getElementById('copyBtn').onclick = copyToClipboard;
-            goToTab('finalTab');
-        }
+            // This opens the user's text sharing / email intent automatically
+            const mailtoLink = `mailto:?subject=Our Date Plan!&body=${encodeURIComponent(message)}`;
+            window.location.href = mailtoLink;
 
-        function copyToClipboard() {
-            navigator.clipboard.writeText(formattedMessage).then(() => {
-                const copyBtn = document.getElementById('copyBtn');
-                copyBtn.innerText = "✅ Copied! Go paste it in our chat!";
-                copyBtn.style.backgroundColor = "#4caf50";
-                alert("Copied to clipboard! 📋 Go ahead and paste it into our chat to send it to me! 🥰");
-            }).catch(err => {
-                alert("Oops, something went wrong copying the text. Try manually selecting it!");
-            });
+            // Change UI text to show it's done
+            document.getElementById('plannerSection').innerHTML = `<h2>It's a date! 🗓️❤️</h2><p>Your choices have been compiled. Send the email or copy the details to text me!</p>`;
         }
     </script>
 </body>
