@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Date Planner ✨</title>
+    <title>Will you go on a date with me sudu 🌷</title> ✨</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,9 +36,10 @@
         .buttons {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 20px;
             position: relative;
-            height: 50px;
+            height: 60px;
             margin-top: 20px;
         }
         button {
@@ -47,7 +48,7 @@
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.1s ease, background-color 0.2s ease;
             font-weight: bold;
         }
         #yesBtn, .next-btn {
@@ -62,13 +63,12 @@
             background-color: #cccccc;
             color: #333333;
             position: absolute;
-            transition: all 0.1s ease;
-            touch-action: none; /* Prevents screen scrolling on mobile when tapping */
+            touch-action: none;
+            z-index: 10; /* Ensures it stays visible but we control position */
         }
         
-        /* Tab System Construction */
         .tab-content {
-            display: none; /* Hidden by default */
+            display: none;
             text-align: left;
             animation: fadeIn 0.4s ease-in-out;
         }
@@ -139,10 +139,10 @@
                 <select id="activitySelect">
                     <option value="" disabled selected>Select an activity...</option>
                     <option value="Grabbing cozy coffee & talking for hours ☕">Cozy Coffee & Talking ☕</option>
-                    <option value="Going on a romantic dinner date 🍝">Romantic Dinner Date 🍝</option>
+                    <option value="Going on a romantic lunch date 🍝">Romantic Dinner Date 🍝</option>
                     <option value="Watching a movie together with snacks 🍿">Movie Night 🍿</option>
                     <option value="Going on a scenic walk & eating ice cream 🍦">Scenic Walk & Ice Cream 🍦</option>
-                    <option value="An adventurous arcade or bowling night 🎳">Arcade / Bowling Night 🎳</option>
+                    <option value="Going a bike ride with a beautiful scene 🏍️">Arcade / Bowling Night 🎳</option>
                 </select>
             </div>
             <button class="next-btn" onclick="finishPlanning()">Lock it in! ❤️</button>
@@ -150,45 +150,67 @@
 
         <div id="finalTab" class="tab-content" style="text-align: center;">
             <h2>It's officially a date! 🥰💘</h2>
-            <p>I’ve compiled your choices. Click the button below to send the details directly back to me!</p>
-            <button class="next-btn" id="sendBtn">Send Plan to Me 📱</button>
+            <p>Your plan is ready! Click below to copy the details, then paste it into our chat to text it to me!</p>
+            <button class="next-btn" id="copyBtn">📋 Copy Details to Text Me</button>
         </div>
     </div>
 
     <script>
-        // Ultimate runaway logic: works seamlessly on screens of all sizes
+        let formattedMessage = "";
+
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
             
-            // Limit bounds so it doesn't move completely off the visible screen
-            const padding = 50;
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            const padding = 60;
+            let randomX, randomY;
+            let overlapping = true;
+
+            // Get the exact location and size of the Yes button
+            const yesRect = yesBtn.getBoundingClientRect();
+
+            // Keep generating a new position until it is safely away from the Yes button
+            while (overlapping) {
+                const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+                const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+                
+                randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+                randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+                // Check if the proposed 'No' button area overlaps with the 'Yes' button area
+                const buffer = 40; // Extra breathing room around the Yes button
+                const noRectFuture = {
+                    left: randomX,
+                    right: randomX + noBtn.offsetWidth,
+                    top: randomY,
+                    bottom: randomY + noBtn.offsetHeight
+                };
+
+                const isOverlappingX = noRectFuture.right >= (yesRect.left - buffer) && noRectFuture.left <= (yesRect.right + buffer);
+                const isOverlappingY = noRectFuture.bottom >= (yesRect.top - buffer) && noRectFuture.top <= (yesRect.bottom + buffer);
+
+                // If it doesn't overlap on X or Y, it's safe!
+                if (!(isOverlappingX && isOverlappingY)) {
+                    overlapping = false; 
+                }
+            }
             
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-            
+            // Set the safe new position
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
         }
 
-        // Standard navigation function to swap tabs
         function goToTab(tabId) {
-            // Hide all tabs
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.classList.remove('active-tab'));
-            
-            // Show target tab
             document.getElementById(tabId).classList.add('active-tab');
             
-            // Brighten background as progress is made
             if (tabId !== 'askTab') {
                 document.body.style.backgroundColor = '#ffccd5';
             }
         }
 
-        // Basic verification for Step 2
         function validateDateTime() {
             const date = document.getElementById('dateSelect').value;
             const time = document.getElementById('timeSelect').value;
@@ -200,7 +222,6 @@
             goToTab('activitiesTab');
         }
 
-        // Prepares data and setups final dynamic mail/text actions
         function finishPlanning() {
             const date = document.getElementById('dateSelect').value;
             const time = document.getElementById('timeSelect').value;
@@ -211,19 +232,21 @@
                 return;
             }
 
-            // Nicely formats text representation
-            const message = `Hey! I filled out the planner. Here is our date layout:\n\n📅 Date: ${date}\n⏰ Time: ${time}\n✨ Activity: ${activity}\n\nSee you then! 😉❤️`;
+            formattedMessage = `Hey! I filled out the planner. Here is our date layout:\n\n📅 Date: ${date}\n⏰ Time: ${time}\n✨ Activity: ${activity}\n\nSee you then! 😉❤️`;
             
-            // Updates button configuration to easily forward to you
-            const sendBtn = document.getElementById('sendBtn');
-            
-            // Set up a mailto anchor
-            sendBtn.onclick = function() {
-                const mailtoLink = `mailto:?subject=Our Date Details!&body=${encodeURIComponent(message)}`;
-                window.location.href = mailtoLink;
-            };
-
+            document.getElementById('copyBtn').onclick = copyToClipboard;
             goToTab('finalTab');
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(formattedMessage).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerText = "✅ Copied! Go paste it in our chat!";
+                copyBtn.style.backgroundColor = "#4caf50";
+                alert("Copied to clipboard! 📋 Go ahead and paste it into our chat to send it to me! 🥰");
+            }).catch(err => {
+                alert("Oops, something went wrong copying the text. Try manually selecting it!");
+            });
         }
     </script>
 </body>
