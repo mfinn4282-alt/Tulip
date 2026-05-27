@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Someone Special</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffe6e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ff4d6d;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 50px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+        #yesBtn:hover {
+            transform: scale(1.1);
+            background-color: #ff758f;
+        }
+        #noBtn {
+            background-color: #cccccc;
+            color: #333333;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="question">Will you go on a date with me? ☕✨</h1>
+        <div class="buttons">
+            <button id="yesBtn" onclick="celebrate()">Yes!</button>
+            <button id="noBtn" onmouseover="moveButton()">No</button>
+        </div>
+    </div>
+
+    <script>
+        // Make the "No" button run away when hovered over
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            // Calculate random positions within the screen boundaries
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        // What happens when she clicks "Yes!"
+        function celebrate() {
+            const question = document.getElementById('question');
+            const buttons = document.querySelector('.buttons');
+            
+            question.innerHTML = "Yay! Best decision ever! ❤️ Check your phone, I'm texting you the details!";
+            buttons.style.display = 'none'; // Hide the buttons
+            
+            // Optional: Shoot some emojis into the background
+            document.body.style.backgroundColor = '#ffccd5';
+        }
+    </script>
+</body>
+</html>
